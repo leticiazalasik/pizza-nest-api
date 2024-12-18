@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo para categorias de pizza
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+   pizzas     Pizza[]
+}
+
+// Modelo para pizzas
+model Pizza {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  price       Decimal  @db.Decimal(10, 2)
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  categoryId  Int      // Chave estrangeira para Category
+  category    Category @relation(fields: [categoryId], references: [id])
+}
